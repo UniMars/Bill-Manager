@@ -5,6 +5,15 @@ import openpyxl
 import pandas as pd
 
 
+def bill_filter(word, ban_list: list):
+    if not isinstance(word, str):
+        return True
+    t = tuple(ban_list)
+    if word.startswith(t):
+        return False
+    return True
+
+
 class BillReader(object):
     __slots__ = '_file', "_type", "_host_name", "_output_path", "_time_filter"
 
