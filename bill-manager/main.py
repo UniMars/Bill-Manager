@@ -42,7 +42,7 @@ def starter(write_p, read_p: str = r"D:\Document\材料\账单&发票"):
 
 if __name__ == '__main__':
     # path = r"C:\Users\Lenovo\OneDrive\Documents\个人财务管理.xlsx"
-    config = "./config.txt"
+    config = "./config.ini"
     open(config, 'a')
     with open(config, 'r', encoding='utf-8') as file:
         lines = file.readlines()

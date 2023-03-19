@@ -1,5 +1,5 @@
 <div align=center>
-<img alt="LOGO" src=./data/icon.svg width="256" height="256" />
+<img alt="LOGO" src=bill-manager/data/icon.svg  height="256" />
 
 # 个人账单管理(Bill Manager)
 <br>
@@ -15,7 +15,7 @@
 ## 文件结构及功能说明：
 
 - Bill Manager
-  - `start.py`: 启动应用的主程序
+  - `main.py`: 启动应用的主程序
   - `data`: 数据存储路径
   - `utils`: 存放用于账单管理的具体实现代码的文件夹
     - `util.py`: 支持通用的账单处理函数
