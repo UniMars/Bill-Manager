@@ -33,8 +33,60 @@
 ### 注意事项：
 
 1. 原始账单地址下需要有微信，支付宝，建行三个文件夹
+2. config.json文件存放有配置参数，修改后三项bool值可以选择导入的账单类型
 
+## 如何导入原始账单
+### 微信账单
+<br>
+微信支付➡️
 
+![img.png](bill-manager/data/pictures/img.png)
+
+➡️我的账单➡️
+
+![img.png](bill-manager/data/pictures/img0.png)
+
+➡️账单明细➡️
+
+![img_1.png](bill-manager/data/pictures/img_1.png)
+
+➡️常见问题➡️
+
+![img_2.png](bill-manager/data/pictures/img_2.png)
+
+➡️下载账单➡️
+
+![img_3.png](bill-manager/data/pictures/img_3.png)
+
+➡️用于个人对账
+
+选择对应时间，微信会将账单以压缩包形式发送至指定邮箱，解压密码会在支付消息里发布
+
+将解压后的csv文件移动到 `$原始账单$/微信/`路径下即可
+
+### 支付宝
+<br>
+我的➡️
+
+![img_4.png](bill-manager/data/pictures/img_4.png)
+
+➡️账单➡️
+
+![img_5.png](bill-manager/data/pictures/img_5.png)
+
+➡️ **···** ➡️
+
+![img_6.png](bill-manager/data/pictures/img_6.png)
+
+➡️开具交易流水证明➡️
+
+![img_7.png](bill-manager/data/pictures/img_7.png)
+
+➡️用于个人对账
+
+输入支付密码后，选择对应时间，支付宝会将账单以压缩包形式发送到指定邮箱
+
+将解压后的csv文件移动到`$原始账单$/支付宝/`路径下即可
 
 ## 贡献者
 @noctboat
