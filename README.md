@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div align=center>
 <img alt="LOGO" src=./data/icon.svg width="256" height="256" />
 
 # 个人账单管理(Bill Manager)
