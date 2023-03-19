@@ -28,7 +28,7 @@ class WCBillReader(BillReader):
 class WCBillWriter(BillWriter):
     __slots__ = "_ban_dict"
 
-    def __init__(self, output_path="./wechat_test.xlsx", time_filter=True):
+    def __init__(self, output_path="../template/wechat_test.xlsx", time_filter=True):
         """
         初始化 WCBillWriter 实例
         :param:

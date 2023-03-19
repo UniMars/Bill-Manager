@@ -46,7 +46,7 @@ class ALiPBillReader(BillReader):
 class ALiPBillWriter(BillWriter):
     __slots__ = "_ban_dict", "_refund_df"
 
-    def __init__(self, output_path=r"./alipay_test.xlsx", time_filter=True):
+    def __init__(self, output_path=r"../template/alipay_test.xlsx", time_filter=True):
         super().__init__(output_path, time_filter)
         self._refund_df = DataFrame()
         self._ban_dict = {"交易状态": ["退款成功", "交易关闭", "还款成功"]}
@@ -108,12 +108,14 @@ class ALiPBillWriter(BillWriter):
         return df_final
 
     # 功能：将退款数据写入支付宝账单
-    def refund_write(self):
+    def refund_write(self, output_path=""):
         """
         将退款数据写入支付宝账单
         """
+        output_path = self._output_path if not output_path else output_path
+
         if not len(self._refund_df):
-            print("\n没有退款\n")
+            print("\n没有支付宝退款\n")
             return
         book = load_workbook(self._output_path)
         sh = book['流水表']

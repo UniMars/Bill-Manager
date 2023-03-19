@@ -56,7 +56,7 @@ class CCBBillWriter(BillWriter):
     建行账单写入器
     """
 
-    def __init__(self, output_path="./ccb_test.xlsx", time_filter=True):
+    def __init__(self, output_path="../template/ccb_test.xlsx", time_filter=True):
         """
         初始化
         :param output_path: 输出文件路径
