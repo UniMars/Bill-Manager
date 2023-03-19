@@ -46,7 +46,7 @@ def writer(write_p, read_p: str = r"D:\Document\材料\账单&发票", is_wechat
         ccb = CCBBillWriter(output_path=write_p)
         ccb_df = ccb.starter(ccb_path)
         final_df = concat([final_df, ccb_df])
-    if not len(final_df):
+    if len(final_df):
         final_df.sort_values(by="交易时间", inplace=True)
     b = BillWriter(output_path=write_p)
     b.write(final_df)
@@ -58,7 +58,10 @@ def starter():
     config_path = "./config.json"
     open(config_path, 'a')
     with open(config_path, 'r', encoding='utf-8') as file:
-        config = json.load(file)
+        try:
+            config = json.load(file)
+        except json.decoder.JSONDecodeError:
+            config = {}
         write_path = config.get('write_path')
         read_path = config.get('read_path')
         is_wechat = bool(config.get("wechat"))
@@ -71,6 +74,10 @@ def starter():
         print(f"\n账单地址：{read_path}\n")
 
         if (not exists(write_path)) or (not exists(read_path)):
+            if not config:
+                is_alipay = True
+                is_wechat = True
+                is_ccb = input("\n是否导入建行账单（是请输入y后按回车键）\n") in ['y', "Y", '']
             # 获取用户输入的字符串
             root = Tk()
             root.withdraw()
@@ -85,9 +92,7 @@ def starter():
                 read_path = filedialog.askdirectory(title="请选择原始账单地址")
                 config['read_path'] = read_path
                 print(f"账单地址：{read_path}\n")
-            if (not is_alipay) and (not is_wechat):
-                is_alipay = True
-                is_wechat = True
+
         config['wechat'] = is_wechat
         config['alipay'] = is_alipay
         config['ccb'] = is_ccb
