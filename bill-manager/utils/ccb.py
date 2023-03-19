@@ -1,6 +1,7 @@
 from os.path import join
 
-import pandas as pd
+# import pandas as pd
+from pandas import DataFrame, read_excel, to_datetime, concat
 from xlrd import open_workbook
 
 from utils.util import BillReader, BillWriter, bill_filter, JRZZLJ
@@ -20,7 +21,7 @@ class CCBBillReader(BillReader):
         super().__init__(file)
         # self._host_name = ""
         self._account = ""  # 银行卡号
-        self._df = pd.DataFrame()  # 账单数据
+        self._df = DataFrame()  # 账单数据
 
     def read_file(self, filepath=""):
         """
@@ -36,14 +37,14 @@ class CCBBillReader(BillReader):
             info_row = sh.row_values(1)
             account = info_row[1][6:]  # 截取银行卡号
             # username = info_row[3][5:]
-            # start_time = pd.to_datetime(info_row[5][5:])
-            # end_time = pd.to_datetime([7][5:])
+            # start_time = to_datetime(info_row[5][5:])
+            # end_time = to_datetime([7][5:])
             # self._host_name = username
             self._account = account
             # title_row = sh.row_values(2)
             # print(title_row)
-            df = pd.read_excel(filepath, sheet_name=0, index_col=0, skiprows=[0, 1], header=0)
-            df['交易日期'] = pd.to_datetime(df['交易日期'], format="%Y%m%d")
+            df = read_excel(filepath, sheet_name=0, index_col=0, skiprows=[0, 1], header=0)
+            df['交易日期'] = to_datetime(df['交易日期'], format="%Y%m%d")
             df[JYJE] = df[JYJE].str.replace(',', '').astype('float64')  # 将交易金额字符串转为浮点数
             df['账户余额'] = df['账户余额'].str.replace(',', '').astype('float64')
             self._df = df
@@ -54,6 +55,7 @@ class CCBBillWriter(BillWriter):
     """
     建行账单写入器
     """
+
     def __init__(self, output_path="./ccb_test.xlsx", time_filter=True):
         """
         初始化
@@ -79,7 +81,7 @@ class CCBBillWriter(BillWriter):
             count += 1
             ccb = CCBBillReader(file=join(path, i))
             df, account = ccb.read_file()
-            temp_df = pd.DataFrame({
+            temp_df = DataFrame({
                 JYSJ: df["交易日期"],
                 "来源": f"建行{account}",
                 "收/支": df[JYJE].apply(lambda x: "收入" if x > 0 else "支出"),
@@ -90,7 +92,7 @@ class CCBBillWriter(BillWriter):
                 "母类别": "",
                 "子类别": "",
                 "总类别": "",
-                "备注": "/"+df['交易地点/附言'],
+                "备注": "/" + df['交易地点/附言'],
                 "收支逻辑": df[JYJE].apply(lambda x: 1 if x > 0 else -1)
             })
             temp_df[JRZZLJ] = 1
@@ -99,14 +101,14 @@ class CCBBillWriter(BillWriter):
                 temp_df[JRZZLJ] *= (df[col].apply(bill_filter, args=(ban_list,)))
             df_list.append(temp_df)
         if not count:
-            df_final = pd.DataFrame(
+            df_final = DataFrame(
                 columns=[JYSJ, "来源", "收/支", "交易类型", "交易对象", "商品", "金额", "母类别", "子类别",
                          "总类别",
                          "备注", "收支逻辑", JRZZLJ
                          ])  # , "乘后金额"
             print("\n---------\n没有新的建行账单被写入")
         else:
-            df_final = pd.concat(df_list)
+            df_final = concat(df_list)
         df_final["乘后金额"] = df_final["收支逻辑"] * df_final[JRZZLJ] * df_final['金额']
         df_final.drop_duplicates(inplace=True)
         df_final.sort_values(by=JYSJ, inplace=True)

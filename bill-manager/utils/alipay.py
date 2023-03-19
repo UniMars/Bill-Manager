@@ -3,7 +3,8 @@ import os
 from parser import ParserError
 from re import compile
 from openpyxl import load_workbook
-import pandas as pd
+# import pandas as pd
+from pandas import DataFrame, read_csv, concat, to_datetime
 from utils.util import BillReader, BillWriter, plus_minus_filter, JRZZLJ, bill_filter
 
 
@@ -12,7 +13,7 @@ class ALiPBillReader(BillReader):
 
     def __init__(self, file=""):
         super().__init__(file)
-        self._df = pd.DataFrame()
+        self._df = DataFrame()
 
     def read_file(self, filepath=""):
         super().read_file(filepath)
@@ -21,13 +22,13 @@ class ALiPBillReader(BillReader):
             lines = f.readlines()
             if lines[0].startswith("------------------------支付宝（中国）网络技术有限公司  电子客户回单"):
                 try:
-                    df = pd.read_csv(filepath, skiprows=1, skipfooter=21, encoding="gb2312", engine="python")
+                    df = read_csv(filepath, skiprows=1, skipfooter=21, encoding="gb2312", engine="python")
                 except Exception as e:
                     print(e)
             elif lines[0].startswith(
                     "------------------------------------------------------------------------------------"):
                 try:
-                    df = pd.read_csv(filepath, skiprows=24, encoding="gb2312")
+                    df = read_csv(filepath, skiprows=24, encoding="gb2312")
                 except Exception as e:
                     print(e)
             else:
@@ -36,7 +37,7 @@ class ALiPBillReader(BillReader):
         # new_columns = list(map(lambda t: t.strip(), df.columns))
         new_columns = df.columns.str.strip()
         df.columns = new_columns
-        df['交易时间'] = pd.to_datetime(df['交易时间'])
+        df['交易时间'] = to_datetime(df['交易时间'])
         df["金额"] = df["金额"].astype('float64')
         self._df = df
         return df
@@ -47,7 +48,7 @@ class ALiPBillWriter(BillWriter):
 
     def __init__(self, output_path=r"./alipay_test.xlsx", time_filter=True):
         super().__init__(output_path, time_filter)
-        self._refund_df = pd.DataFrame()
+        self._refund_df = DataFrame()
         self._ban_dict = {"交易状态": ["退款成功", "交易关闭", "还款成功"]}
 
     # 功能：读取和处理支付宝账单数据
@@ -58,7 +59,7 @@ class ALiPBillWriter(BillWriter):
         :return: 经过处理的 pandas DataFrame，包含如下列："交易时间"，"来源"，"收/支"，"交易类型"，"交易对象"，"商品"，"金额"，"母类别"，"子类别"，"总类别"，"备注"，"收支逻辑"，"计入总账逻辑"。
         """
         df_list = []
-        refund_df = pd.DataFrame()
+        refund_df = DataFrame()
         count = 0
         for i in super().starter(path):
             if not i.endswith(".csv"):
@@ -66,7 +67,7 @@ class ALiPBillWriter(BillWriter):
             count += 1
             ali = ALiPBillReader(file=os.path.join(path, i))
             df = ali.read_file()
-            temp_df = pd.DataFrame()
+            temp_df = DataFrame()
             temp_df["交易时间"] = df["交易时间"]
             temp_df["来源"] = "支付宝"
             temp_df["收/支"] = df['收/支']
@@ -81,7 +82,7 @@ class ALiPBillWriter(BillWriter):
             temp_df["备注"] = "/交易状态：" + df['交易状态'] + "/交易订单号：" + df['交易订单号'] + "/商家订单号：" + df[
                 '商家订单号']
 
-            refund_df = pd.concat([refund_df, df[df["交易状态"].str.startswith("退款成功")]])
+            refund_df = concat([refund_df, df[df["交易状态"].str.startswith("退款成功")]])
 
             temp_df["收支逻辑"] = df['收/支'].apply(plus_minus_filter)
             temp_df[JRZZLJ] = 1
@@ -91,14 +92,14 @@ class ALiPBillWriter(BillWriter):
         if len(refund_df):
             refund_df["original_交易订单号"] = refund_df["交易订单号"].str.split(compile("[_*]")).apply(lambda x: x[0])
         if not count:
-            df_final = pd.DataFrame(
+            df_final = DataFrame(
                 columns=["交易时间", "来源", "收/支", "交易类型", "交易对象", "商品", "金额", "母类别", "子类别",
                          "总类别",
                          "备注", "收支逻辑", JRZZLJ
                          ])  # , "乘后金额"
             print("\n---------\n没有新的支付宝账单被写入")
         else:
-            df_final = pd.concat(df_list)
+            df_final = concat(df_list)
         df_final["乘后金额"] = df_final["收支逻辑"] * df_final[JRZZLJ] * df_final['金额']
         df_final.drop_duplicates(inplace=True)
         df_final.sort_values(by="交易时间", inplace=True)
@@ -118,7 +119,7 @@ class ALiPBillWriter(BillWriter):
         sh = book['流水表']
         column_source = tuple(map(lambda c: c.value, sh["B"]))
         column_memo = sh["K"]
-        cell_df = pd.DataFrame([column_source, column_memo]).T
+        cell_df = DataFrame([column_source, column_memo]).T
         cell_df = cell_df[cell_df[0].notnull()]
         memo = cell_df[cell_df[0].str.startswith("支付宝")].iloc[::-1][1]
         for _, row in self._refund_df.iterrows():
