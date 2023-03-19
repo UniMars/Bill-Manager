@@ -1,5 +1,5 @@
 <div align=center>
-<img alt="LOGO" src=bill-manager/data/icon.svg  height="256" />
+<img alt="LOGO" src=img/icon/icon.svg  height="256" />
 
 # 个人账单管理(Bill Manager)
 <br>
@@ -48,23 +48,23 @@
 <br>
 微信支付➡️
 
-![img.png](bill-manager/data/pictures/img.png)
+![img.png](img/img_1.png)
 
 ➡️我的账单➡️
 
-![img.png](bill-manager/data/pictures/img0.png)
+![img.png](img/img_2.png)
 
 ➡️账单明细➡️
 
-![img_1.png](bill-manager/data/pictures/img_1.png)
+![img_1.png](img/img_3.png)
 
 ➡️常见问题➡️
 
-![img_2.png](bill-manager/data/pictures/img_2.png)
+![img_2.png](img/img_4.png)
 
 ➡️下载账单➡️
 
-![img_3.png](bill-manager/data/pictures/img_3.png)
+![img_3.png](img/img_5.png)
 
 ➡️用于个人对账
 
@@ -76,19 +76,19 @@
 <br>
 我的➡️
 
-![img_4.png](bill-manager/data/pictures/img_4.png)
+![img_4.png](img/img_6.png)
 
 ➡️账单➡️
 
-![img_5.png](bill-manager/data/pictures/img_5.png)
+![img_5.png](img/img_7.png)
 
 ➡️ **···** ➡️
 
-![img_6.png](bill-manager/data/pictures/img_6.png)
+![img_6.png](img/img_8.png)
 
 ➡️开具交易流水证明➡️
 
-![img_7.png](bill-manager/data/pictures/img_7.png)
+![img_7.png](img/img_9.png)
 
 ➡️用于个人对账
 
