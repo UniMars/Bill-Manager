@@ -26,7 +26,7 @@
 
 
 ## 如何使用
-1. 运行`main.py`或者启动打包后的`Bill Manager.exe`
+1. 运行`main.py`或者启动打包后的`Bill Manager.exe`[下载连接](https://github.com/UniMars/Bill-Manager/releases)
 2. 根据窗口提示选择需要输出的`xlsx`表格地址和原始账单位置
 3. 运行结束后会打开之前输出的表格文件查看，账目汇总在工作簿-流水表，没有问题即可关闭，结束本次运行。
 
